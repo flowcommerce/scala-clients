@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
 
 load 'lib/build.rb'
+load 'lib/generator.rb'
 load 'lib/util.rb'
 
 ORG = "flow"
 
-#generators = ["play_2_x_standalone_json", "play_2_4_client"]
-generators = ["play_2_4_client"]
+generators = [Generator.new("play_2_4_client", "app"),
+              Generator.new("play_2_x_standalone_json", "src/main/scala")]
+
+generators = [Generator.new("play_2_4_client", "app")]
 
 builds = [
   Build.new("api", generators)
@@ -82,9 +85,9 @@ builds.each do |b|
   puts b.name
 
   b.generators.each do |generator|
-    puts "  - " + generator
+    puts "  - " + generator.key
 
-    artifact_name = ("%s_%s" % [b.name, generator]).gsub(/\_/, '-')
+    artifact_name = ("%s_%s" % [b.name, generator.key]).gsub(/\_/, '-')
 
     artifact_version = latest_apibuilder_version(ORG, b.name)
     substitutions = {
@@ -94,15 +97,15 @@ builds.each do |b|
     }
 
     Util.with_tmp_dir do |dir|
-      copy_template(File.join("templates", generator), dir, substitutions)
+      copy_template(File.join("templates", generator.key), dir, substitutions)
 
-      srcdir = File.join(dir, "src/main/scala")
+      srcdir = File.join(dir, generator.srcdir)
       run("mkdir -p #{srcdir}")
       Dir.chdir(dir) do
         b.applications.each do |app|
           version = app == b.name ? artifact_version : latest_apibuilder_version(ORG, app)
           puts "   - generating code for %s/%s:%s" % [ORG, app, version]
-          run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator, srcdir])
+          run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
         end
       end
     end

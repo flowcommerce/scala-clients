@@ -1,5 +1,3 @@
-import play.PlayImport.PlayKeys._
-
 name := "{{NAME}}"
 
 organization := "io.flow"
