@@ -9,7 +9,7 @@ ORG = "flow"
 generators = ["play_2_4_client"]
 
 builds = [
-  Build.new("api", ["api", "api-event"], generators)
+  Build.new("api", generators)
 ]
 
 def run(cmd)

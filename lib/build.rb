@@ -1,10 +1,10 @@
 class Build
 
-  attr_reader :name, :applications, :generators
+  attr_reader :name, :generators, :applications
 
-  def initialize(name, applications, generators)
+  def initialize(name, generators, additional_applications=[])
     @name = name
-    @applications = applications
+    @applications = [@name] + (additional_applications || [])
     @generators = generators
   end
 
