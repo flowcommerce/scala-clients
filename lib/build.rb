@@ -1,9 +1,10 @@
 class Build
 
-  attr_reader :name, :generators
+  attr_reader :name, :applications, :generators
 
-  def initialize(name, generators)
+  def initialize(name, applications, generators)
     @name = name
+    @applications = applications
     @generators = generators
   end
 

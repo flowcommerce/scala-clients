@@ -9,8 +9,7 @@ ORG = "flow"
 generators = ["play_2_4_client"]
 
 builds = [
-  Build.new("api", generators),
-  Build.new("api-event", generators)
+  Build.new("api", ["api", "api-event"], generators)
 ]
 
 def run(cmd)
@@ -66,6 +65,19 @@ def copy_template(template_dir, target_dir, substitutions)
   end
 end
 
+def latest_apibuilder_version(org, name)
+  if name == "api"
+    return "0.3.64"
+  end
+  cmd = "apibuilder list versions %s %s" % [org, name]
+  versions = run(cmd).strip.split
+  if versions.empty?
+    puts "ERROR: No versions found for %s/%s" % [org, name]
+    exit(1)
+  end
+  versions.first
+end
+
 builds.each do |b|
   puts b.name
 
@@ -73,7 +85,8 @@ builds.each do |b|
     puts "  - " + generator
 
     artifact_name = ("%s_%s" % [b.name, generator]).gsub(/\_/, '-')
-    artifact_version = "0.3.64"
+
+    artifact_version = latest_apibuilder_version(ORG, b.name)
     substitutions = {
       "NAME" => artifact_name,
       "ARTIFACT_VERSION" => artifact_version,
@@ -81,13 +94,16 @@ builds.each do |b|
     }
 
     Util.with_tmp_dir do |dir|
-      puts "    dir: #{dir}"
       copy_template(File.join("templates", generator), dir, substitutions)
 
       srcdir = File.join(dir, "src/main/scala")
       run("mkdir -p #{srcdir}")
       Dir.chdir(dir) do
-        run("apibuilder code %s %s %s %s %s" % [ORG, b.name, artifact_version, generator, srcdir])
+        b.applications.each do |app|
+          version = app == b.name ? artifact_version : latest_apibuilder_version(ORG, app)
+          puts "   - generating code for %s/%s:%s" % [ORG, app, version]
+          run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator, srcdir])
+        end
       end
     end
   end
