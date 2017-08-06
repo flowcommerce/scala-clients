@@ -93,7 +93,8 @@ builds.each do |b|
     substitutions = {
       "NAME" => artifact_name,
       "ARTIFACT_VERSION" => artifact_version,
-      "PLAY_JSON_VERSION" => "2.4.11"
+      "PLAY_JSON_VERSION" => "2.4.11",
+      "PLAY_VERSION" => "2.4.11"
     }
 
     Util.with_tmp_dir do |dir|
