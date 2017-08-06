@@ -11,7 +11,14 @@ module Util
     @@COUNTER += 1
     `mkdir -p #{dir}`
     yield dir
-    `rm -rf #{dir}`    
+    #`rm -rf #{dir}`    
+  end
+
+  def Util.with_tmp_file
+    path = File.join(Util.tmpfile, "#{@@COUNTER}.tmp")
+    @@COUNTER += 1
+    yield path
+    #`rm #{path}`
   end
 
 end

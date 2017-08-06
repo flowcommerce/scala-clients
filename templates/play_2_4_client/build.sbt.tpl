@@ -32,4 +32,4 @@ publishTo := {
   }
 }
 
-version := "{{VERSION}}"
+version := "{{ARTIFACT_VERSION}}"
