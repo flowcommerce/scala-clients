@@ -10,8 +10,9 @@ crossScalaVersions := Seq("2.11.11", "2.10.6")
 
 lazy val root = project
   .in(file("."))
+  .enablePlugins(PlayScala)
   .settings(
-      libraryDependencies ++= Seq(
+    libraryDependencies ++= Seq(
       "com.typesafe.play" %% "play-json" % "{{PLAY_JSON_VERSION}}"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
@@ -23,7 +24,7 @@ lazy val root = project
       System.getenv("ARTIFACTORY_USERNAME"),
       System.getenv("ARTIFACTORY_PASSWORD")
     )
-)
+  )
 
 publishTo := {
   val host = "https://flow.artifactoryonline.com/flow"
