@@ -13,6 +13,7 @@ lazy val root = project
   .enablePlugins(PlayScala)
   .settings(
     libraryDependencies ++= Seq(
+      ws,
       "com.typesafe.play" %% "play-json" % "{{PLAY_JSON_VERSION}}"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
