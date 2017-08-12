@@ -79,7 +79,7 @@ class Executor
 end
 
 def latest_apibuilder_version(org, name)
-  url = 'https://app.apibuilder.io/%s/metadata/%s/versions.txt' % [org, name]
+  url = 'http://api.apibuilder.io/%s/metadata/%s/versions/latest.txt' % [org, name]
   cmd = "curl --silent %s" % url
   version = `#{cmd}`.strip.split.first.to_s.strip
 
@@ -94,8 +94,8 @@ def latest_apibuilder_version(org, name)
     puts "       %s" % url
     exit(1)
   end
-  
-  versions.first
+
+  version
 end
 
 builds.each do |b|
