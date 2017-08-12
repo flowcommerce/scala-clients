@@ -9,7 +9,7 @@ ORG = "flow"
 generators = [Generator.new("play_2_4_client", "app"),
               Generator.new("play_2_x_standalone_json", "src/main/scala")]
 
-#generators = [Generator.new("play_2_4_client", "app")]
+generators = [Generator.new("play_2_x_standalone_json", "src/main/scala")]
 
 builds = [
   Build.new("api", generators)
@@ -29,6 +29,16 @@ class Executor
       out << cmd << "\n"
     end
     `#{cmd}`
+  end
+
+  def run_with_system(cmd)
+    File.open(@log, "a") do |out|
+      out << cmd << "\n"
+    end
+    if !system(cmd)
+      puts "ERROR: #{cmd} failed"
+      exit(1)
+    end
   end
 
   def interpolate(source_path, path, substitutions)
@@ -129,8 +139,13 @@ builds.each do |b|
       Dir.chdir(dir) do
         b.applications.each do |app|
           version = app == b.name ? artifact_version : latest_apibuilder_version(ORG, app)
+
           puts "    - generating code for %s/%s:%s" % [ORG, app, version]
           executor.run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
+
+          puts "    - publishing artifact %s" % artifact_name
+          executor.run_with_system("sbt +publish")
+          puts ""
         end
       end
     end
