@@ -9,84 +9,99 @@ ORG = "flow"
 generators = [Generator.new("play_2_4_client", "app"),
               Generator.new("play_2_x_standalone_json", "src/main/scala")]
 
-generators = [Generator.new("play_2_4_client", "app")]
+#generators = [Generator.new("play_2_4_client", "app")]
 
 builds = [
   Build.new("api", generators)
 ]
 
-def run(cmd)
-  puts "==> #{cmd}"
-  `#{cmd}`
-end
+class Executor
+  def initialize(dir)
+    @dir = dir
+    @log = File.join(dir, "build.log")
+  end
 
-def interpolate(source_path, path, substitutions)
-  found = false
-  Util.with_tmp_file do |tmp|
-    File.open(tmp, "w") do |out|
-      i=j=nil
-      IO.readlines(path).each do |l|
-        i = l.index("{{")
-        j = l.index("}}")
-        while i && j && i < j
-          found = true
-          name = l[i+2, j-i-2]
-          value = substitutions[name]
-          if value.nil?
-            puts "ERROR: File %s requires a variable named [%s]" % [source_path, name]
-            exit(1)
-          end
-          l = l[0, i] + value + l[j+2, l.length]
+  def run(cmd)
+    File.open(@log, "a") do |out|
+      out << out
+    end
+    `#{cmd}`
+  end
+
+  def interpolate(source_path, path, substitutions)
+    found = false
+    Util.with_tmp_file do |tmp|
+      File.open(tmp, "w") do |out|
+        i=j=nil
+        IO.readlines(path).each do |l|
           i = l.index("{{")
           j = l.index("}}")
-        end
+          while i && j && i < j
+            found = true
+            name = l[i+2, j-i-2]
+            value = substitutions[name]
+            if value.nil?
+              puts "ERROR: File %s requires a variable named [%s]" % [source_path, name]
+              exit(1)
+            end
+            l = l[0, i] + value + l[j+2, l.length]
+            i = l.index("{{")
+            j = l.index("}}")
+          end
 
-        out << l
+          out << l
+        end
+      end
+      if found
+        run("cp #{tmp} #{path}")
       end
     end
-    if found
-      run("cp #{tmp} #{path}")
-    end         
   end
-end
 
-def copy_template(template_dir, target_dir, substitutions)
-  run("mkdir -p #{target_dir}")
+  def copy_template(template_dir, target_dir, substitutions)
+    run("mkdir -p #{target_dir}")
 
-  Dir.glob("#{template_dir}/*").each do |f|
-    if File.directory?(f)
-      name = File.basename(f)
-      copy_template(File.join(template_dir, name), File.join(target_dir, name), substitutions)
-    elsif f =~ /\.tpl$/
-      name = File.basename(f).sub(/\.tpl$/, '')
-      target = File.join(target_dir, name)
-      run("cp #{f} #{target}")
-      interpolate(f, target, substitutions)
-    else
-      run("cp #{f} #{target_dir}")
+    Dir.glob("#{template_dir}/*").each do |f|
+      if File.directory?(f)
+        name = File.basename(f)
+        copy_template(File.join(template_dir, name), File.join(target_dir, name), substitutions)
+      elsif f =~ /\.tpl$/
+        name = File.basename(f).sub(/\.tpl$/, '')
+        target = File.join(target_dir, name)
+        run("cp #{f} #{target}")
+        interpolate(f, target, substitutions)
+      else
+        run("cp #{f} #{target_dir}")
+      end
     end
   end
+
 end
 
 def latest_apibuilder_version(org, name)
-  if name == "api"
-    return "0.3.64"
-  end
-  cmd = "apibuilder list versions %s %s" % [org, name]
-  versions = run(cmd).strip.split
-  if versions.empty?
+  url = 'https://app.apibuilder.io/%s/metadata/%s/versions.txt' % [org, name]
+  cmd = "curl --silent %s" % url
+  version = `#{cmd}`.strip.split.first.to_s.strip
+
+  if version.empty?
     puts "ERROR: No versions found for %s/%s" % [org, name]
+    puts "  URL: %s" % url
     exit(1)
   end
+
+  if !version.match(/^\d+\.\d+\.\d+/)
+    puts "ERROR: Invalid version '%s' - expected a sem ver version" % version
+    puts "       %s" % url
+    exit(1)
+  end
+  
   versions.first
 end
 
 builds.each do |b|
-  puts b.name
+  puts "%s/%s" % [ORG, b.name]
 
   b.generators.each do |generator|
-    puts "  - " + generator.key
-
     artifact_name = ("%s_%s" % [b.name, generator.key]).gsub(/\_/, '-')
 
     artifact_version = latest_apibuilder_version(ORG, b.name)
@@ -98,15 +113,17 @@ builds.each do |b|
     }
 
     Util.with_tmp_dir do |dir|
-      copy_template(File.join("templates", generator.key), dir, substitutions)
+      puts "  - %s [in %s]" + [generator.key, dir]
+      executor = Executor.new(dir)
+      executor.copy_template(File.join("templates", generator.key), dir, substitutions)
 
       srcdir = File.join(dir, generator.srcdir)
-      run("mkdir -p #{srcdir}")
+      executorrun("mkdir -p #{srcdir}")
       Dir.chdir(dir) do
         b.applications.each do |app|
           version = app == b.name ? artifact_version : latest_apibuilder_version(ORG, app)
           puts "   - generating code for %s/%s:%s" % [ORG, app, version]
-          run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
+          executor.run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
         end
       end
     end
