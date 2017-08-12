@@ -16,6 +16,9 @@ builds = [
 ]
 
 class Executor
+
+  attr_reader :log
+
   def initialize(dir)
     @dir = dir
     @log = File.join(dir, "build.log")
@@ -23,7 +26,7 @@ class Executor
 
   def run(cmd)
     File.open(@log, "a") do |out|
-      out << out
+      out << cmd << "\n"
     end
     `#{cmd}`
   end
@@ -113,16 +116,20 @@ builds.each do |b|
     }
 
     Util.with_tmp_dir do |dir|
-      puts "  - %s [in %s]" + [generator.key, dir]
+      puts "  - %s" % generator.key
+      puts "    - using temporary directory: %s" % dir
+
       executor = Executor.new(dir)
+      puts "    - log: %s" % executor.log
+
       executor.copy_template(File.join("templates", generator.key), dir, substitutions)
 
       srcdir = File.join(dir, generator.srcdir)
-      executorrun("mkdir -p #{srcdir}")
+      executor.run("mkdir -p #{srcdir}")
       Dir.chdir(dir) do
         b.applications.each do |app|
           version = app == b.name ? artifact_version : latest_apibuilder_version(ORG, app)
-          puts "   - generating code for %s/%s:%s" % [ORG, app, version]
+          puts "    - generating code for %s/%s:%s" % [ORG, app, version]
           executor.run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
         end
       end
