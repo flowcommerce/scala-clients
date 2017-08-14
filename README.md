@@ -6,11 +6,23 @@ Responsible for publishing our API Builder clients as JARs
 
 Play 2.4 client:
 
-    "io.flow" %% "api-play-2-4-client" % "0.3.71"
+    "io.flow" %% "api-play-2-4-client" % "0.3.73"
+
+Play 2.4 mock client:
+
+    "io.flow" %% "api-play-2-4-mock-client" % "0.3.73"
+
+Play 2.5 client:
+
+    "io.flow" %% "api-play-2-5-client" % "0.3.73"
+
+Play 2.5 mock client:
+
+    "io.flow" %% "api-play-2-5-mock-client" % "0.3.73"
 
 Play 2.x json models:
 
-    "io.flow" %% "api-play-2-x-standalone-json" % "0.3.71"
+    "io.flow" %% "api-play-2-x-standalone-json" % "0.3.73"
 
 Resolver:
 
