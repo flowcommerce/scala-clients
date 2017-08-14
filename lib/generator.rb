@@ -5,7 +5,7 @@ class Generator
   def initialize(key, srcdir, opts={})
     @key = key
     @srcdir = srcdir
-    @template_dir = opts.delete[:template] || @key
+    @template = opts.delete(:template) || @key
   end
 
 end
