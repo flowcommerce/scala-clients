@@ -13,7 +13,8 @@ lazy val root = project
   .enablePlugins(PlayScala)
   .settings(
     libraryDependencies ++= Seq(
-      ws
+      ws,
+     "io.flow" %% "api-play-2-4-client" % "0.3.73"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",

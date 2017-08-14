@@ -1,12 +1,10 @@
-import play.PlayImport.PlayKeys._
-
 name := "{{NAME}}"
 
 organization := "io.flow"
 
 scalaVersion in ThisBuild := "2.11.11"
 
-crossScalaVersions := Seq("2.11.11", "2.10.6")
+crossScalaVersions := Seq("2.11.11")
 
 lazy val root = project
   .in(file("."))

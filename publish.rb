@@ -6,11 +6,13 @@ load 'lib/util.rb'
 
 ORG = "flow"
 
-generators = [Generator.new("play_2_4_client", "app"),
-              Generator.new("play_2_4_mock_client", "app", :template => "play_2_4_client"),
-              Generator.new("play_2_5_client", "app"),
-              Generator.new("play_2_5_mock_client", "app", :template => "play_2_5_client"),
-              Generator.new("play_2_x_standalone_json", "src/main/scala")]
+generators = [
+  Generator.new("play_2_4_client", "app"),
+  Generator.new("play_2_4_mock_client", "app"),
+  Generator.new("play_2_5_client", "app"),
+  Generator.new("play_2_5_mock_client", "app"),
+  Generator.new("play_2_x_standalone_json", "src/main/scala")
+]
 
 builds = [
   Build.new("api", generators)
@@ -36,10 +38,7 @@ class Executor
     File.open(@log, "a") do |out|
       out << cmd << "\n"
     end
-    if !system(cmd)
-      puts "ERROR: #{cmd} failed"
-      exit(1)
-    end
+    system(cmd)
   end
 
   def interpolate(source_path, path, substitutions)
@@ -121,9 +120,7 @@ builds.each do |b|
     artifact_version = latest_apibuilder_version(ORG, b.name)
     substitutions = {
       "NAME" => artifact_name,
-      "ARTIFACT_VERSION" => artifact_version,
-      "PLAY_JSON_VERSION" => "2.4.11",
-      "PLAY_VERSION" => "2.4.11"
+      "ARTIFACT_VERSION" => artifact_version
     }
 
     Util.with_tmp_dir do |dir|
@@ -145,8 +142,9 @@ builds.each do |b|
           executor.run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
 
           puts "    - publishing artifact %s" % artifact_name
-          executor.run_with_system("sbt +publish")
-          puts ""
+          if !executor.run_with_system("sbt +publish")
+            puts "*** WARNING *** sbt +publish failed"
+          end
         end
       end
     end
