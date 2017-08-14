@@ -2,9 +2,27 @@
 
 Responsible for publishing our API Builder clients as JARs
 
-## Usage
+## Installation
+
+Play 2.4 client:
+
+    "io.flow" %% "api-play-2-4-client" % "0.3.71"
+
+Play 2.x json models:
+
+    "io.flow" %% "api-play-2-x-standalone-json" % "0.3.71"
+
+Resolver:
+
+    resolvers ++= Seq(
+      "Artifactory" at "https://flow.artifactoryonline.com/flow/libs-release/"
+     )
+       
+## To publish new versions of the clients
 
     ./publish.rb
+
+## Configuring a new library
 
 Generators are added in ruby code (in publish.rb) ala:
 
@@ -15,7 +33,6 @@ Parameters:
 
   - play_2_4_client: The apibuilder generator key (See
     https://app.apibuilder.io/generators/)
-
   - The source directory in which sbt will look for code. Generated
     code will be placed beneath this directory.
 
