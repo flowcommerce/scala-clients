@@ -143,7 +143,9 @@ builds.each do |b|
 
           puts "    - publishing artifact %s" % artifact_name
           if !executor.run_with_system("sbt +publish")
-            puts "*** WARNING *** sbt +publish failed"
+            puts ""
+            puts "*** WARNING *** sbt +publish failed for artifact %s" % artifact_name
+            puts ""
           end
         end
       end
