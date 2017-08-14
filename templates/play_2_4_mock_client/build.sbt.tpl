@@ -14,7 +14,7 @@ lazy val root = project
   .settings(
     libraryDependencies ++= Seq(
       ws,
-     "io.flow" %% "api-play-2-4-client" % "0.3.73"
+     "io.flow" %% "api-play-2-4-client" % "{{ARTIFACT_VERSION}}"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
