@@ -111,6 +111,9 @@ def latest_apibuilder_version(org, name)
   version
 end
 
+succeeded = []
+failed = []
+
 builds.each do |b|
   puts "%s/%s" % [ORG, b.name]
 
@@ -142,7 +145,10 @@ builds.each do |b|
           executor.run("apibuilder code %s %s %s %s %s" % [ORG, app, version, generator.key, srcdir])
 
           puts "    - publishing artifact %s" % artifact_name
-          if !executor.run_with_system("sbt +publish")
+          if executor.run_with_system("sbt +publish")
+            succeeded << artifact_name
+          else
+            failed << artifact_name
             puts ""
             puts "*** WARNING *** sbt +publish failed for artifact %s" % artifact_name
             puts ""
@@ -152,4 +158,16 @@ builds.each do |b|
     end
   end
 end
+
+puts ""
+if failed.empty?
+  puts "All artifacts published successfully"
+else
+  puts "*** WARNING *** 1 or more artifacts failed to publish:"
+  failed.each do |artifact|
+    puts " - %s" % artifact
+  end
+end
+
+exit(failed.size)
 
