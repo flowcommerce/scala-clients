@@ -10,7 +10,7 @@ lazy val root = project
   .in(file("."))
   .settings(
       libraryDependencies ++= Seq(
-      "com.typesafe.play" %% "play-json" % "{{PLAY_JSON_VERSION}}"
+      "com.typesafe.play" %% "play-json" % "2.4.11"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
