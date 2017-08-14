@@ -7,6 +7,9 @@ load 'lib/util.rb'
 ORG = "flow"
 
 generators = [Generator.new("play_2_4_client", "app"),
+              Generator.new("play_2_4_mock_client", "app", :template => "play_2_4_client"),
+              Generator.new("play_2_5_client", "app"),
+              Generator.new("play_2_5_mock_client", "app", :template => "play_2_5_client"),
               Generator.new("play_2_x_standalone_json", "src/main/scala")]
 
 builds = [
@@ -130,7 +133,7 @@ builds.each do |b|
       executor = Executor.new(dir)
       puts "    - log: %s" % executor.log
 
-      executor.copy_template(File.join("templates", generator.key), dir, substitutions)
+      executor.copy_template(File.join("templates", generator.template), dir, substitutions)
 
       srcdir = File.join(dir, generator.srcdir)
       executor.run("mkdir -p #{srcdir}")

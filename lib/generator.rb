@@ -1,10 +1,11 @@
 class Generator
 
-  attr_reader :key, :srcdir
+  attr_reader :key, :srcdir, :template
 
-  def initialize(key, srcdir)
+  def initialize(key, srcdir, opts={})
     @key = key
     @srcdir = srcdir
+    @template_dir = opts.delete[:template] || @key
   end
 
 end
