@@ -1,5 +1,7 @@
 name := "{{NAME}}"
 
+organization := "io.flow"
+
 scalaVersion := "2.11.11"
 
 crossScalaVersions := Seq("2.11.11", "2.10.6")
