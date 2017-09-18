@@ -8,7 +8,8 @@ crossScalaVersions := Seq("2.11.11", "2.10.6")
 
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-json" % "2.4.11",
-  "com.ning" % "async-http-client" % "1.9.40"
+  "com.ning" % "async-http-client" % "1.9.40",
+  "io.flow" %% "api-ning-1-9-client" % "{{ARTIFACT_VERSION}}"
 )
 
 resolvers += "Artifactory" at "https://flow.artifactoryonline.com/flow/libs-release/"
