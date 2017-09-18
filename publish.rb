@@ -16,6 +16,8 @@ generators = [
   Generator.new("ning_1_9_mock_client", "src/main/scala")
 ]
 
+generators = [generators.last]
+
 builds = [
   Build.new("api", generators)
 ]
@@ -99,8 +101,13 @@ def latest_apibuilder_version(org, name)
   version = `#{cmd}`.strip.split.first.to_s.strip
 
   if version.empty?
-    puts "ERROR: No versions found for %s/%s" % [org, name]
-    puts "  URL: %s" % url
+    puts ""
+    puts "ERROR: No versions found for %s/%s while running:" % [org, name]
+    puts ""
+    puts "  %s" % cmd
+    puts ""
+    puts "Verify that you have an internet connection and that the API Builder URL is public"
+    puts ""
     exit(1)
   end
 
