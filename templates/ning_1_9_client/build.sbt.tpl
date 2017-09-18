@@ -7,6 +7,15 @@ libraryDependencies ++= Seq(
   "com.ning" % "async-http-client" % "1.9.40"
 )
 
+resolvers += "Artifactory" at "https://flow.artifactoryonline.com/flow/libs-release/"
+
+credentials += Credentials(
+  "Artifactory Realm",
+  "flow.artifactoryonline.com",
+  System.getenv("ARTIFACTORY_USERNAME"),
+  System.getenv("ARTIFACTORY_PASSWORD")
+)
+
 publishTo := {
   val host = "https://flow.artifactoryonline.com/flow"
   if (isSnapshot.value) {
