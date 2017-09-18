@@ -20,8 +20,19 @@ generator_key = ARGV.shift.to_s.strip
 selected_generators = all_generators.select { |g|
   generator_key.empty? || g.key == generator_key
 }
-puts selected_generators.inspect
-exit(1)
+if selected_generators.empty?
+  if !generator_key.empty?
+    puts ""
+    puts "ERROR: No generated with key %s" % generator_key
+    puts ""
+    puts "Available generators:"
+    all_generators.map(&:key).sort.each do |k|
+      puts " - %s" % k
+    end
+    exit(1)
+  end
+  raise "ERROR: No generators found"
+end
 
 builds = [
   Build.new("api", selected_generators)
