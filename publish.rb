@@ -7,7 +7,13 @@ load 'lib/util.rb'
 ORG = "flow"
 
 generators = [
-  Generator.new("ning_1_9_client", "src/main/scala")
+  Generator.new("play_2_4_client", "app"),
+  Generator.new("play_2_4_mock_client", "app"),
+  Generator.new("play_2_5_client", "app"),
+  Generator.new("play_2_5_mock_client", "app"),
+  Generator.new("play_2_x_standalone_json", "src/main/scala"),
+  Generator.new("ning_1_9_client", "src/main/scala"),
+  Generator.new("ning_1_9_mock_client", "src/main/scala")
 ]
 
 builds = [
