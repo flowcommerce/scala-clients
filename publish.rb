@@ -6,7 +6,7 @@ load 'lib/util.rb'
 
 ORG = "flow"
 
-generators = [
+all_generators = [
   Generator.new("play_2_4_client", "app"),
   Generator.new("play_2_4_mock_client", "app"),
   Generator.new("play_2_5_client", "app"),
@@ -16,10 +16,15 @@ generators = [
   Generator.new("ning_1_9_mock_client", "src/main/scala")
 ]
 
-generators = [generators.last]
+generator_key = ARGV.shift.to_s.strip
+selected_generators = all_generators.select { |g|
+  generator_key.empty? || g.key == generator_key
+}
+puts selected_generators.inspect
+exit(1)
 
 builds = [
-  Build.new("api", generators)
+  Build.new("api", selected_generators)
 ]
 
 class Executor
