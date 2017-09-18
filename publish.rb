@@ -1,5 +1,13 @@
 #!/usr/bin/env ruby
 
+# Usage:
+#
+# To publish all client:
+#   ./publish.rb
+#
+# Or publish a single client:
+#   ./publish.rb ning_1_9_client
+
 load 'lib/build.rb'
 load 'lib/generator.rb'
 load 'lib/util.rb'
@@ -11,6 +19,8 @@ all_generators = [
   Generator.new("play_2_4_mock_client", "app"),
   Generator.new("play_2_5_client", "app"),
   Generator.new("play_2_5_mock_client", "app"),
+  Generator.new("play_2_6_client", "app"),
+  Generator.new("play_2_6_mock_client", "app"),
   Generator.new("play_2_x_standalone_json", "src/main/scala"),
   Generator.new("ning_1_9_client", "src/main/scala"),
   Generator.new("ning_1_9_mock_client", "src/main/scala")
