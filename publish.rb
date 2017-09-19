@@ -161,7 +161,7 @@ builds.each do |b|
       "ARTIFACT_VERSION" => artifact_version
     }
 
-    Util.with_tmp_dir do |dir|
+    Util.with_tmp_dir(generator.key) do |dir|
       puts "  - %s" % generator.key
       puts "    - using temporary directory: %s" % dir
 
