@@ -4,14 +4,15 @@ organization := "io.flow"
 
 scalaVersion in ThisBuild := "2.12.3"
 
-crossScalaVersions := Seq("2.12.3")
+crossScalaVersions := Seq("2.11.11", "2.12.3")
 
 lazy val root = project
   .in(file("."))
   .enablePlugins(PlayScala)
   .settings(
     libraryDependencies ++= Seq(
-      ws
+      ws,
+      "com.typesafe.play" %% "play-json" % "2.6.3"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
