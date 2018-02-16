@@ -2,9 +2,9 @@ name := "{{NAME}}"
 
 organization := "io.flow"
 
-scalaVersion in ThisBuild := "2.12.3"
+scalaVersion in ThisBuild := "2.12.4"
 
-crossScalaVersions := Seq("2.11.11", "2.12.3")
+crossScalaVersions := Seq("2.11.11", "2.12.4")
 
 lazy val root = project
   .in(file("."))
@@ -12,7 +12,7 @@ lazy val root = project
   .settings(
     libraryDependencies ++= Seq(
       ws,
-      "com.typesafe.play" %% "play-json" % "2.6.3"
+      "com.typesafe.play" %% "play-json" % "2.6.8"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
