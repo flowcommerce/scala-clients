@@ -12,7 +12,8 @@ lazy val root = project
   .settings(
     libraryDependencies ++= Seq(
       ws,
-      "com.typesafe.play" %% "play-json" % "2.6.8"
+      "com.typesafe.play" %% "play-json" % "2.6.8",
+      "com.typesafe.play" %% "play-json-joda" % "2.6.8"
     ),
     resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases",
