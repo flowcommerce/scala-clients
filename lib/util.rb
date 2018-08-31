@@ -10,7 +10,7 @@ module Util
     dir = File.join(@@TMP_DIR, generator_key)
     `mkdir -p #{dir}`
     yield dir
-    `rm -rf #{dir}`    
+#    `rm -rf #{dir}`    
   end
 
   def Util.with_tmp_file
