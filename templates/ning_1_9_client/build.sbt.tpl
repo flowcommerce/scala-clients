@@ -2,12 +2,12 @@ name := "{{NAME}}"
 
 organization := "io.flow"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.10"
 
-crossScalaVersions := Seq("2.11.11", "2.10.6")
+crossScalaVersions := Seq("2.12.10")
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.4.11",
+  "com.typesafe.play" %% "play-json" % "2.7.4",
   "com.ning" % "async-http-client" % "1.9.40"
 )
 
